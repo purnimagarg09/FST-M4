@@ -1,0 +1,33 @@
+--Create, view and use database 
+show databases;
+CREATE DATABASE office;
+show databases;
+use office;
+
+--Create and view table Employee
+show tables;
+CREATE TABLE employee
+     (id INT, name STRING, dept STRING, yoj INT, salary INT)
+     ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+     TBLPROPERTIES ("skip.header.line.count"="1");
+
+ show tables;
+
+--Load data into employee table
+LOAD DATA LOCAL INPATH 'root/empData.csv' INTO TABLE employee;
+
+--Run queries in employee table
+select * from employee;
+select count(*) from employee;
+
+--Exports to HDFS directory
+INSERT OVERWRITE DIRECTORY '/user/purnima/HiveOutput'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    SELECT * FROM employee where dept='IT';
+
+--Exports to local directory
+INSERT OVERWRITE DIRECTORY '/root/HiveOutput'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    SELECT * FROM employee where dept='IT';
