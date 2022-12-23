@@ -1,0 +1,16 @@
+--Drop tables if they exist (for rerun)
+DROP TABLE episodes;
+
+--Input table
+CREATE TABLE episodes (name STRING, line STRING)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
+TBLPROPERTIES ("skip.header.line.count"="2");
+
+--Load data into table
+LOAD DATA LOCAL INPATH 'root/inputs/episodeIV_dialouges.txt' INTO TABLE episodes;
+LOAD DATA LOCAL INPATH 'root/inputs/episodeV_dialouges.txt' INTO TABLE episodes;
+LOAD DATA LOCAL INPATH 'root/inputs/episodeVI_dialouges.txt' INTO TABLE episodes;
+
+--Count number of lines spoken by each character
+INSERT OVERWRITE DIRECTORY '/user/purnima/HiveProjectOutput'
+SELECT name, COUNT(name) AS no_of_lines FROM episodes GROUP BY name ORDER BY no_of_lines DESC;
